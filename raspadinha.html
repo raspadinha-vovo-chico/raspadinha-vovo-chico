@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Raspadinha - Promoção</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; background: #f9f9f9; padding-top: 50px; }
+  #scratch { position: relative; width: 300px; height: 300px; margin: 0 auto; }
+  #prize {
+    position: absolute; top: 0; left: 0;
+    width: 300px; height: 300px;
+    background: white; color: #333;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 24px; font-weight: bold;
+    padding: 20px;
+  }
+  #cover {
+    position: absolute; top: 0; left: 0;
+    width: 300px; height: 300px;
+    background: gray;
+  }
+</style>
+</head>
+<body>
+<h2>🎁 Raspe para descobrir seu prêmio!</h2>
+<div id="scratch">
+  <div id="prize"></div>
+  <canvas id="cover"></canvas>
+</div>
+
+<script>
+  const prizes = [
+    "🍯 Geleia de pimenta do Vovô Chico",
+    "🥩 1 kg de linguiça tradicional",
+    "❌ Não foi dessa vez",
+    "💸 10% de desconto",
+    "💸 5% de desconto",
+    "❌ Não foi dessa vez"
+  ];
+
+  document.getElementById("prize").innerText = prizes[Math.floor(Math.random() * prizes.length)];
+
+  const canvas = document.getElementById('cover');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 300;
+  canvas.height = 300;
+
+  ctx.fillStyle = '#b5b5b5';
+  ctx.fillRect(0, 0, 300, 300);
+
+  let scratching = false;
+
+  function scratch(e) {
+    if (!scratching) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x, y, 20, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  canvas.addEventListener('mousedown', () => scratching = true);
+  canvas.addEventListener('mouseup', () => scratching = false);
+  canvas.addEventListener('mousemove', scratch);
+
+  canvas.addEventListener('touchstart', () => scratching = true);
+  canvas.addEventListener('touchend', () => scratching = false);
+  canvas.addEventListener('touchmove', scratch);
+</script>
+
+</body>
+</html>
